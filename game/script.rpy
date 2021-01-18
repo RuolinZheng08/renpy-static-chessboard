@@ -21,14 +21,22 @@ label start:
     # directory.
 
     show eileen happy at right
-    e "Let's play chess"
+    e "Let's play chess!"
     show screen static_chessboard()
-    e "Let me make a crazy move"
-    show screen static_chessboard('rnbqkbnr/8/8/pppppppp/8/8/PPPPPPPP/RNBQKBNR')
-    e "Done"
-    e "Now let's highlight d5 and e6"
-    show screen static_chessboard('rnbqkbnr/8/8/pppppppp/8/8/PPPPPPPP/RNBQKBNR', highlighted_squares=['d5', 'e6'])
-    e ":D"
+    e "I will go first. I'll move my pawn forward."
+    show screen static_chessboard('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR')
+    e "Let me highlight my previous move for you to see."
+    show screen static_chessboard('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR', highlighted_squares=['e2', 'e4'])
+    e "Now it's your turn."
+    e "I'll highlight two moves that you can make. Choose your move:"
+    show screen static_chessboard('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR', highlighted_squares=['c5', 'c6'])    
+    menu:
+        "Move pawn to c6":
+            $ fen = 'rnbqkbnr/pp1ppppp/2p5/8/4P3/8/PPPP1PPP/RNBQKBNR'
+        "Move pawn to c5":
+            $ fen = 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR'
+    show screen static_chessboard(fen)
+    e "That's a nice move! Now let's resume the game."
 
     # This ends the game.
 

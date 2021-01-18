@@ -5,7 +5,7 @@ define LOC_LEN = 90 # length of one side of a loc
 define INDEX_MIN = 0
 define INDEX_MAX = 7
 
-define COLOR_HIGHLIGHT = '#45c8ff50' # blue
+define COLOR_HIGHLIGHT = '#afeeeeaa' # PaleTurquoise
 
 # use tuples for immutability
 define PIECE_TYPES = ('p', 'r', 'b', 'n', 'k', 'q')
@@ -82,8 +82,9 @@ init python:
                 render.place(self.highlight_img, x=square_coord[0], y=square_coord[1])
             # render pieces on board
             for rank_idx, rank in enumerate(self.piece_array): # row
+                print(rank_idx, rank)
                 for file_idx, piece in enumerate(rank):
-                    if piece == '':
+                    if piece == ' ':
                         continue
                     piece_img = self.piece_imgs[piece]
                     piece_coord = file_rank_to_coord(file_idx, rank_idx)
@@ -97,9 +98,7 @@ init python:
 
         def parse(self):
             ranks = self.fen_str.split(' ')[0].split('/')
-            pieces_on_all_ranks = [self.parse_rank(rank) for rank in ranks]
-            # reverse the string such that white starts on the bottom
-            pieces_on_all_ranks.reverse()
+            pieces_on_all_ranks = [self.parse_rank(rank) for rank in ranks[::-1]] # reverse ranks
             return pieces_on_all_ranks
 
         def parse_rank(self, rank):
@@ -113,10 +112,15 @@ init python:
 
         def expand_or_noop(self, piece_str):
             """
-            return an empty string if there is no piece
+            represent an empty square with a space
             """
             piece_re = re.compile(r'([kqbnrpKQBNRP])')
-            retval = ''
+            retval = None
             if piece_re.match(piece_str):
-                retval = piece_str
+              retval = piece_str
+            else:
+              retval = self.expand(piece_str)
             return retval
+
+        def expand(self, num_str):
+            return int(num_str) * ' '
