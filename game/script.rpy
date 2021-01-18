@@ -26,6 +26,9 @@ label start:
     e "Let me make a crazy move"
     show screen static_chessboard('rnbqkbnr/8/8/pppppppp/8/8/PPPPPPPP/RNBQKBNR')
     e "Done"
+    e "Now let's highlight d5 and e6"
+    show screen static_chessboard('rnbqkbnr/8/8/pppppppp/8/8/PPPPPPPP/RNBQKBNR', highlighted_squares=['d5', 'e6'])
+    e ":D"
 
     # This ends the game.
 

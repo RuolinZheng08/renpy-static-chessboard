@@ -5,6 +5,8 @@ define LOC_LEN = 90 # length of one side of a loc
 define INDEX_MIN = 0
 define INDEX_MAX = 7
 
+define COLOR_HIGHLIGHT = '#45c8ff50' # blue
+
 # use tuples for immutability
 define PIECE_TYPES = ('p', 'r', 'b', 'n', 'k', 'q')
 
@@ -15,8 +17,8 @@ define CHESSBOARD_IMG = 'chessboard.png'
 
 define STARTING_BOARD_FEN= 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
 
-screen static_chessboard(fen=STARTING_BOARD_FEN):
-    add StaticChessDisplayable(fen=fen)
+screen static_chessboard(fen=STARTING_BOARD_FEN, highlighted_squares=[]):
+    add StaticChessDisplayable(fen=fen, highlighted_squares=highlighted_squares)
 
 init python:
 
@@ -30,11 +32,21 @@ init python:
         y = LOC_LEN * (INDEX_MAX - rank_idx)
         return (x, y)
 
+    def square_to_file_rank_indices(square):
+        """
+        has promotion if len(square) == 3
+        """
+        assert len(square) == 2 or len(square) == 3
+        square = square[:2] # ignore promotion
+        file_idx = ord(square[0]) - ord('a')
+        rank_idx = int(square[1]) - 1
+        return file_idx, rank_idx
+
     class StaticChessDisplayable(renpy.Displayable):
         """
         Takes a board FEN and renders it as a Displayable object
         """
-        def __init__(self, fen=STARTING_BOARD_FEN):
+        def __init__(self, fen=STARTING_BOARD_FEN, highlighted_squares=[]):
             """
             fen: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
             """
@@ -54,12 +66,20 @@ init python:
             fen_parser = FenParser(fen)
             self.piece_array = fen_parser.parse()
 
+            self.highlighted_squares = [square_to_file_rank_indices(square) for square in highlighted_squares]
+            # displayable
+            self.highlight_img = Solid(COLOR_HIGHLIGHT, xsize=LOC_LEN, ysize=LOC_LEN)
+
         def render(self, width, height, st, at):
             render = renpy.Render(width, height)
             # render chessboard image
             chessboard_path = os.path.join(IMAGE_DIR, CHESSBOARD_IMG)
             chessboard_img = Image(chessboard_path)
             render.place(chessboard_img)
+            # render highlighted squares
+            for file_idx, rank_idx in self.highlighted_squares:
+                square_coord = file_rank_to_coord(file_idx, rank_idx)
+                render.place(self.highlight_img, x=square_coord[0], y=square_coord[1])
             # render pieces on board
             for rank_idx, rank in enumerate(self.piece_array): # row
                 for file_idx, piece in enumerate(rank):
