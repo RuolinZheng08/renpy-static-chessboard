@@ -1,5 +1,14 @@
-# use loc to mean UI square and distinguish from logical square
-define LOC_LEN = 90 # length of one side of a loc
+# file paths
+# name of the current directory
+define CURRENT_DIR = '00-static-chessboard'
+define CHESSPIECE_DIR = 'chesspieces'
+define CHESSBOARD_IMG = 'chessboard.png'
+
+# width of the chessboard, height should be the same
+# a multiple of 8 is ideal as there are 8 squares in each file or rank
+define CHESS_BOARD_LEN = 720
+# width of a square on the board, height is the same
+define LOC_LEN = int(float(CHESS_BOARD_LEN) / 8)
 
 # both file and rank index from 0 to 7
 define INDEX_MIN = 0
@@ -9,11 +18,6 @@ define COLOR_HIGHLIGHT = '#afeeeeaa' # PaleTurquoise
 
 # use tuples for immutability
 define PIECE_TYPES = ('p', 'r', 'b', 'n', 'k', 'q')
-
-# file paths
-define IMAGE_DIR = 'images'
-define CHESSPIECE_DIR = 'chesspieces/'
-define CHESSBOARD_IMG = 'chessboard.png'
 
 define STARTING_BOARD_FEN= 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
 
@@ -57,8 +61,8 @@ init python:
             self.piece_imgs = {}
             for piece in PIECE_TYPES:
                 white_piece, black_piece = piece.upper(), piece
-                white_path = os.path.join(IMAGE_DIR, CHESSPIECE_DIR, 'w' + white_piece + '.png')
-                black_path = os.path.join(IMAGE_DIR, CHESSPIECE_DIR, 'b' + black_piece + '.png')
+                white_path = os.path.join(CURRENT_DIR, CHESSPIECE_DIR, 'w' + white_piece + '.png')
+                black_path = os.path.join(CURRENT_DIR, CHESSPIECE_DIR, 'b' + black_piece + '.png')
                 self.piece_imgs[white_piece] = Image(white_path)
                 self.piece_imgs[black_piece] = Image(black_path)
 
@@ -73,7 +77,7 @@ init python:
         def render(self, width, height, st, at):
             render = renpy.Render(width, height)
             # render chessboard image
-            chessboard_path = os.path.join(IMAGE_DIR, CHESSBOARD_IMG)
+            chessboard_path = os.path.join(CURRENT_DIR, CHESSBOARD_IMG)
             chessboard_img = Image(chessboard_path)
             render.place(chessboard_img)
             # render highlighted squares

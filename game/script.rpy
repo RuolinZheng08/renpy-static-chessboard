@@ -29,7 +29,7 @@ label start:
     show screen static_chessboard('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR', highlighted_squares=['e2', 'e4'])
     e "Now it's your turn."
     e "I'll highlight two moves that you can make. Choose your move:"
-    show screen static_chessboard('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR', highlighted_squares=['c5', 'c6'])    
+    show screen static_chessboard('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR', highlighted_squares=['c5', 'c6'])
     menu:
         "Move pawn to c6":
             $ fen = 'rnbqkbnr/pp1ppppp/2p5/8/4P3/8/PPPP1PPP/RNBQKBNR'
